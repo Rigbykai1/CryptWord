@@ -12,11 +12,12 @@ def selectOption():
     option = input("Elija una opción: ")
     return option
 
-def options(menuOption):
+def options():
+    Utils.clearCli()
+    menuOption = selectOption()
     Utils.clearCli()
     if menuOption == "4":
-        Utils.clearCli()
-        return False
+        return 0
     elif menuOption == "1":
         PassWordEncripter.main()
     elif menuOption == "2":
@@ -33,8 +34,11 @@ def options(menuOption):
 
 def main():
     while True:
-        option = selectOption()
-        if options(option):
+        option = options()
+        if option == 0:
+            Utils.clearCli()
+            break
+        if option:
             if Utils.cerrarPrograma():
                 break
         Utils.clearCli()
