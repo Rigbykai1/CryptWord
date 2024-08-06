@@ -44,7 +44,7 @@ def main():
             Utils.pausa(1)
         try:
             print(f"Archivo {password} actual")
-            pin = input("Ingresa el pin:")
+            pin = Utils.tryPin()
             with open(f'Passwords/{password}', 'rb') as file:
                 encrypted_password = file.read()
             decryptedPassword = Crypto.decryptPassword(encrypted_password, pin)
