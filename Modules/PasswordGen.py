@@ -41,16 +41,17 @@ def main():
         print(f'Contraseña creada: {password}')
         pyperclip.copy("")
         pyperclip.copy(password)
-        print('Contraseña copiada en el portapapeles')            
+        print('Contraseña copiada en el portapapeles')
+        opcion = input('Desea guardar la contraseña [S/N]: ')\
+            
+        if opcion.upper() == "S":
+            savePasswordBin(password)
+            print("Contraseña guardada")
+        Utils.pausa(1)
+        
     except:
         print('Debes ingresar un numero.')
         main()
-        
-    opcion = input('Desea guardar la contraseña [S/N]: ')
-    if opcion.upper() == "S":
-        savePasswordBin(password)
-        print("Contraseña guardada")
-        Utils.pausa(2)
     
 if __name__ == "__main__":
     main()

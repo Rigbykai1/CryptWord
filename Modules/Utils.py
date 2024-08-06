@@ -21,6 +21,10 @@ def cerrarPrograma():
     clearCli()
     return False
 
+def tryPin():
+    pin = getpass.getpass(prompt="Ingresa el PIN: ")  
+    return pin
+
 def verifyPin():
     while True:
         pin1 = getpass.getpass(prompt="Ingresa el PIN: ")  
