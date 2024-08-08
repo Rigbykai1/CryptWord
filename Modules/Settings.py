@@ -6,7 +6,7 @@ import os
 def createDefaultConfig():
     config = configparser.ConfigParser()
     config['SETTINGS'] = {
-        'autoCopyPassword': 'True',
+        'autoCopyPassword': 'False',
         'folderName': 'passwords'
     }
     with open('settings.txt', 'w') as configfile:
@@ -59,6 +59,7 @@ def handleAutoCopy():
 
 
 def handleNewFolder():
+    global folderName, directory
     Utils.clearCli()
     newFolderName = input("Ingrese la nueva ruta de guardado: ")
     if newFolderName:
@@ -74,7 +75,7 @@ def main():
     while True:
         Utils.clearCli()
         print("------------------------------------------------")
-        print(f"Ruta de guardado actual {directory}")
+        print(f"Ruta de guardado actual: {directory}")
         print(f"Copiado al portapapeles automático: {autoCopyPassword}")
         print("------------------------------------------------")
         opcion = selectOption()

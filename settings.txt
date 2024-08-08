@@ -1,4 +1,4 @@
 [SETTINGS]
-autocopypassword = False
+autocopypassword = True
 foldername = Passwords
 
