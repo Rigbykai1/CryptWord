@@ -1,4 +1,4 @@
-.Passwords/
+*.Passwords/
 __pycache__/
 *.py[cod]
 *.log
