@@ -1,52 +1,77 @@
+Aquí tienes una versión mejorada de tu README. He agregado más claridad, organización y correcciones de estilo:
+
+---
+
 # CryptWord
 
-Cryptword es un programa en python que realicé para encriptar contraseñas a formato Binario, lo realicé porque utilizó un programa de gestión de contraseñas, entonces guardo algunas contraseñas en formato binario mediante un pin, para luego utilizar dicha contraseña liberandola por decirlo así.
+**CryptWord** es un programa en Python diseñado para encriptar contraseñas en formato binario. Esta herramienta fue desarrollada debido a mi uso de un programa de gestión de contraseñas, en el cual guardo algunas contraseñas en formato binario mediante un PIN, permitiendo liberarlas cuando las necesito.
 
 ## Comenzando 🚀
 
 _Estas instrucciones te permitirán obtener una copia del proyecto en funcionamiento en tu máquina local para propósitos de desarrollo y pruebas._
 
-Para utilizar el código debes tener instalado Git y clonar el repositorio en la carpeta que deseas, abres un terminal y ejecutas el siguiente comando: 
-```
+### Requisitos
+
+Asegúrate de tener instalado [Git](https://git-scm.com/) en tu sistema. 
+
+### Clonación del Repositorio
+
+Para clonar el repositorio, abre una terminal y ejecuta el siguiente comando:
+
+```bash
 git clone https://github.com/Rigbykai1/CryptWord
 ```
-### Instalación 🔧
-Para la instalación solo debes utilizar el comando para clonar el repositorio y ejecutar el main de la ruta principal del programa.
+
+## Instalación 🔧
+
+Después de clonar el repositorio, navega a la carpeta del proyecto y ejecuta el archivo principal del programa. Esto se puede hacer con el siguiente comando en la terminal:
+
+```bash
+py main.py
+```
 
 ## Uso 👌
 
-La utilización del programa es sencilla, es una aplicación de menú, por lo que navegarás a través de comandos por decirlo así, tienes un menú donde podrás elegir entre crear una contraseña cifrada, descifrar una contraseña que ya tengas cifrada, generar una contraseña y un apartado de configuraciones para personalizar algunos parámetros
+La utilización del programa es sencilla, ya que cuenta con un menú interactivo. Podrás navegar a través de comandos y elegir entre las siguientes opciones:
+
+1. Crear una contraseña cifrada.
+2. Descifrar una contraseña previamente cifrada.
+3. Generar una nueva contraseña.
+4. Acceder a configuraciones para personalizar algunos parámetros.
 
 ## Construido con 🛠️
 
-_Menciona las herramientas que utilizaste para crear tu proyecto_
+_Menciona las herramientas que utilizaste para crear tu proyecto:_
 
-* [Python](https://www.python.org/) - Lenguaje de programación
-* [Git](https://git-scm.com/) - Manejador de versiones
-* [GitHub](https://github.com/) - Hospedaje del proyecto
-* [Visual Studio Code](https://code.visualstudio.com/) - Editor de código
+* [Python](https://www.python.org/) - Lenguaje de programación.
+* [Git](https://git-scm.com/) - Sistema de control de versiones.
+* [GitHub](https://github.com/) - Plataforma de hospedaje del proyecto.
+* [Visual Studio Code](https://code.visualstudio.com/) - Editor de código.
 
 ## Contribuyendo 🖇️
 
-Para contribuir puedes realizarlo siempre y cuando especifiques en el commit lo que realizaste y el propósito de ello.
+Para contribuir al proyecto, realiza un fork del repositorio y envía un pull request. Asegúrate de especificar en el commit qué cambios realizaste y el propósito de estos.
 
 ## Versionado 📌
 
-Para el versionado utilicé git, por lo que puedes ver los cambios realizados desde que publiqué el primer código.
+El proyecto utiliza Git para el control de versiones. Puedes consultar los cambios realizados desde la primera publicación del código.
 
 ## Autores ✒️
 
-* **Jonathan Aragón** - *Proyecto* - [Rigbykai1](https://github.com/Rigbykai1/)
-
+* **Jonathan Aragón** - [Rigbykai1](https://github.com/Rigbykai1/) - Desarrollador del proyecto.
 
 ## Licencia 📄
 
-Aún sin licencia, pero puedes usarlo libremente y aportar mejoras si así lo deseas.
+Este proyecto no tiene licencia formal, pero puedes usarlo libremente y contribuir con mejoras si lo deseas.
 
-## Muchas gracias por leerme hasta acá 🥳
+## Agradecimientos 🎉
 
-* Comenta a otros sobre este proyecto 📢
-* Invita una cerveza 🍺 o un café ☕ a alguien del equipo. 
-* Da las gracias públicamente 🤓.
+Gracias por tomarte el tiempo de leer este README. 
+
+* Comparte el proyecto con otros. 📢
+* Invita a alguien del equipo a un café ☕ o una cerveza 🍺. 
+* Agradece públicamente a quienes han contribuido. 🤓
+
 ## Menciones
-Plantilla realizada con ❤️ por [Villanuevand](https://github.com/Villanuevand) 😊
+
+Plantilla realizada con ❤️ por [Villanuevand](https://github.com/Villanuevand) 😊
