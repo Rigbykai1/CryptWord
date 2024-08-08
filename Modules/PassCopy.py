@@ -41,7 +41,6 @@ def main():
     binFile = selectPassword()
     if not binFile:
         Utils.pausa(2)
-        main()
     else:
         while True:
             Utils.clearCli()
