@@ -35,7 +35,7 @@ def selectOption():
     print("1. Copiar automáticamente la contraseña al portapapeles.")
     print("2. Cambiar ruta de guardado.")
     print("3. Salir")
-    option = int(input("Elija una opción: "))
+    option = input("Elija una opción: ")
     return option
 
 
@@ -79,15 +79,16 @@ def main():
         print(f"Copiado al portapapeles automático: {autoCopyPassword}")
         print("------------------------------------------------")
         opcion = selectOption()
-        if opcion == 1:
+        if opcion == "1":
             handleAutoCopy()
-        elif opcion == 2:
+        elif opcion == "2":
             handleNewFolder()
-        elif opcion == 3:
+        elif opcion == "3":
             print("Cerrando menu...")
             break
         else:
             print("Opción no válida, por favor intente de nuevo.")
+            Utils.pausa(1)
 
 
 if __name__ == "__main__":
