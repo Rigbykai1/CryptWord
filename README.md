@@ -1,7 +1,3 @@
-Aquí tienes una versión mejorada de tu README. He agregado más claridad, organización y correcciones de estilo:
-
----
-
 # CryptWord
 
 **CryptWord** es un programa en Python diseñado para encriptar contraseñas en formato binario. Esta herramienta fue desarrollada debido a mi uso de un programa de gestión de contraseñas, en el cual guardo algunas contraseñas en formato binario mediante un PIN, permitiendo liberarlas cuando las necesito.
