@@ -1,4 +1,5 @@
 [SETTINGS]
 autocopypassword = False
-foldername = Passwords
+foldername = passwords
+defaultfile = Edge2Auth.bin
 

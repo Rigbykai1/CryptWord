@@ -2,29 +2,42 @@ import os
 from Modules import Settings
 import Modules.Utils as Utils
 
+def leerArchivos(directorio):
+    archivos = os.listdir(directorio)
+    if not archivos:
+        print("No hay contraseñas guardadas.")
+        return []
+    return archivos
+
+def leerContrasenas(archivos):
+    passwords = []
+    for index, archivo in enumerate(archivos):
+        print(f"{index+1} - {archivo}")
+        passwords.append(archivo)
+    return passwords
 
 def selectPassword():
     Utils.pathVerificator()
     directorio = Settings.directory
-    passwords = []
-    archivos = os.listdir(directorio)
-    if archivos == []:
-        print("No hay contraseñas guardadas.")
+    archivos = leerArchivos(directorio)
+
+    if not archivos:
         return False
+
+    passwords = leerContrasenas(archivos)
+    totalPasswords = len(passwords)
+
     try:
-        for index, archivo in enumerate(archivos):
-            print(f"{index} - {archivo}")
-            passwords.append(archivo)
-        totalPasswords = len(passwords) - 1
         while True:
             try:
-                opcion = int(
-                    input(f"Elija una opción [0 - {totalPasswords}]: "))
-                passwordFile = passwords[opcion]
-                print(f"{passwordFile}")
-                if passwordFile:
+                opcion = int(input(f"Elija una opción [1 - {totalPasswords}]: "))
+                if 1 <= opcion <= totalPasswords:
+                    passwordFile = passwords[opcion - 1]
+                    print(f"{passwordFile}")
                     return passwordFile
-            except Exception:
+                else:
+                    print("Opción fuera de rango. Intente de nuevo.")
+            except ValueError:
                 Utils.clearCli()
                 print("Por favor ingrese un número válido.")
                 return False
@@ -34,7 +47,6 @@ def selectPassword():
     except Exception as e:
         print(f"Ocurrió un error: {e}")
         return False
-
 
 def main():
     Utils.clearCli()
@@ -46,7 +58,6 @@ def main():
             Utils.clearCli()
             if Utils.recoverPassword(binFile):
                 break
-
 
 if __name__ == "__main__":
     main()

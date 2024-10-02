@@ -3,7 +3,7 @@ import time
 import getpass
 import pyperclip
 import Modules.CryptoFunctions as Crypto
-import Modules.Settings as Settings
+from Modules import Settings
 
 
 def pathVerificator():
@@ -21,15 +21,6 @@ def pausa(timer):
 
 def pausaInterrumpida():
     input("Presione Enter para continuar...")
-
-
-def cerrarPrograma():
-    opcion = input("¿Desea salir de la aplicación? [S/N] ")
-    if opcion in ["S", "s"]:
-        clearCli()
-        return True
-    clearCli()
-    return False
 
 
 def tryPin(passwordBinFile):
@@ -82,15 +73,31 @@ def copyToClipboard(password, tiempoEspera):
 def recoverPassword(passwordBinFile):
     clearCli()
     tiempoEspera = 5
+    file_path = os.path.join(Settings.directory, passwordBinFile)
+
+    # Verificar si el archivo existe
+    if not os.path.exists(file_path):
+        print(f"El archivo {passwordBinFile} no existe en la ruta {Settings.directory}.")
+        pausa(2)
+        return False
+
     print(f"Archivo actual: {passwordBinFile}")
-    with open(f'{Settings.directory}{passwordBinFile}', 'rb') as file:
-        passwordFile = file.read()
+
+    try:
+        with open(file_path, 'rb') as file:
+            passwordFile = file.read()
+    except Exception as e:
+        print(f"Ocurrió un error al leer el archivo: {e}")
+        pausa(2)
+        return False
+
     decryptedPassword = tryPin(passwordFile)
     if not decryptedPassword:
         clearCli()
-        print("PIN incorrecto verificalo.")
+        print("PIN incorrecto, verifícalo.")
         pausa(2)
         return False
+
     if decryptedPassword:
         copyToClipboard(decryptedPassword, tiempoEspera)
         return True
