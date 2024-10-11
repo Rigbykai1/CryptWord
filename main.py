@@ -6,7 +6,7 @@ import Modules.Settings as Settings
 import time
 
 # Función para mostrar el menú
-def mostrar_menu():
+def mostrarMenu():
     print("1. Cifrar contraseña")
     print("2. Descifrar contraseña")
     print("3. Generar contraseña")
@@ -14,19 +14,19 @@ def mostrar_menu():
     print("5. Salir")
 
 # Función para seleccionar una opción válida del menú
-def seleccionar_opcion():
+def seleccionarOpcion():
     while True:
-        mostrar_menu()
+        mostrarMenu()
         opcion = input("Elija una opción: ")
         if opcion in ["1", "2", "3", "4", "5"]:
             return opcion
         else:
             print("Opción no válida. Intente de nuevo.")
             time.sleep(1)
-            Utils.clearCli()
+            Utils.borrarConsola()
 
 # Función para ejecutar las acciones según la opción elegida
-def ejecutar_opcion(opcion):
+def ejecutarOpcion(opcion):
     if opcion == "1":
         PassWordEncripter.main()
     elif opcion == "2":
@@ -37,37 +37,37 @@ def ejecutar_opcion(opcion):
         Settings.main()
 
 # Función para ejecutar el archivo predeterminado
-def ejecutar_archivo_predeterminado():
-    default_file = Settings.defaultFile
-    if default_file:
-        print(f"Ejecutando el archivo predeterminado: {default_file}")
-        if Utils.recoverPassword(default_file):
-            print(f"Contraseña recuperada del archivo: {default_file}")
+def ejecutarArchivoPredeterminado():
+    archivoPredeterminado = Settings.archivoPorDefecto
+    if archivoPredeterminado:
+        print(f"Ejecutando el archivo predeterminado: {archivoPredeterminado}")
+        if Utils.recuperarContrasena(archivoPredeterminado):
+            print(f"Contraseña recuperada del archivo: {archivoPredeterminado}")
         else:
-            print(f"No se pudo recuperar la contraseña del archivo: {default_file}")
+            print(f"No se pudo recuperar la contraseña del archivo: {archivoPredeterminado}")
     else:
         print("No hay archivo predeterminado configurado.")
 
 # Función principal que maneja el ciclo del menú
 def main():
-    Utils.clearCli()
-    ejecutar_archivo_predeterminado()  # Ejecuta el archivo predeterminado al inicio
+    Utils.borrarConsola()
+    ejecutarArchivoPredeterminado()  # Ejecuta el archivo predeterminado al inicio
     while True:
-        Utils.clearCli()
-        opcion = seleccionar_opcion()
+        Utils.borrarConsola()
+        opcion = seleccionarOpcion()
         
         if opcion == "5":
-            Utils.clearCli()
+            Utils.borrarConsola()
             print("Saliendo de CryptWord")
             Utils.pausa(2)
             break
 
         # Ejecutar la opción seleccionada
-        ejecutar_opcion(opcion)
+        ejecutarOpcion(opcion)
         
         # Pausa antes de volver al menú
         time.sleep(1)
-        Utils.clearCli()
+        Utils.borrarConsola()
 
 # Iniciar el programa
 if __name__ == "__main__":

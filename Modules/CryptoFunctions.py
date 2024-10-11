@@ -5,7 +5,7 @@ from cryptography.hazmat.primitives import padding
 from cryptography.hazmat.backends import default_backend
 
 
-def encryptPassword(password, pin):
+def encriptarContrasena(password, pin):
     try:
         salt = os.urandom(16)
         key = sha256(pin.encode() + salt).digest()
@@ -24,7 +24,7 @@ def encryptPassword(password, pin):
         return None
 
 
-def decryptPassword(encryptedPassword, pin):
+def desencriptarContrasena(encryptedPassword, pin):
     try:
         salt = encryptedPassword[:16]
         encryptedPassword = encryptedPassword[16:]
@@ -37,9 +37,9 @@ def decryptPassword(encryptedPassword, pin):
         padded_password = decryptor.update(
             encryptedPassword) + decryptor.finalize()
         unpadder = padding.PKCS7(algorithms.AES.block_size).unpadder()
-        password = unpadder.update(padded_password) + unpadder.finalize()
+        contrasena = unpadder.update(padded_password) + unpadder.finalize()
         print("Contraseña desencriptada")
-        return password.decode()
+        return contrasena.decode()
     except Exception:
         print(f"Error al desencriptar la contraseña")
         return None

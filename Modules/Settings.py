@@ -3,58 +3,37 @@ import configparser
 import os
 
 # Crear archivo de configuración por defecto
-def createDefaultConfig():
-    config = configparser.ConfigParser()
-    config['SETTINGS'] = {
-        'autoCopyPassword': 'False',
-        'folderName': 'passwords',  # Carpeta predeterminada
-        'defaultFile': ''  # Campo para archivo predeterminado
+def crearArchivoPorDefecto():
+    configuracion = configparser.ConfigParser()
+    configuracion['SETTINGS'] = {
+        'autoCopiarContrasena': 'False', # Desactivado por defecto
+        'nombreFolder': 'passwords',  # Carpeta predeterminada "/passwords"
+        'archivoPorDefecto': ''  # Campo para archivo predeterminado "settings.txt"
     }
-    with open('settings.txt', 'w') as configfile:
-        config.write(configfile)
+    with open('settings.txt', 'w') as archivoDeConfiguracion:
+        configuracion.write(archivoDeConfiguracion)
     print("Archivo de configuración creado con valores por defecto.")
 
 # Leer archivo de configuración
-config = configparser.ConfigParser()
+configuracion = configparser.ConfigParser()
 
 try:
     if not os.path.exists('settings.txt'):
-        createDefaultConfig()
-    config.read('settings.txt')
+        crearArchivoPorDefecto()
+    configuracion.read('settings.txt')
 
-    autoCopyPassword = config.getboolean('SETTINGS', 'autoCopyPassword')
-    folderName = config.get('SETTINGS', 'folderName')
-    defaultFile = config.get('SETTINGS', 'defaultFile')  # Leer archivo predeterminado
-    directory = f"{folderName}/"  # Definir directory
+    autoCopiarContrasena = configuracion.getboolean('SETTINGS', 'autoCopiarContrasena')
+    nombreFolder = configuracion.get('SETTINGS', 'nombreFolder')
+    archivoPorDefecto = configuracion.get('SETTINGS', 'archivoPorDefecto')  # Leer archivo predeterminado
+    directorio = f"{nombreFolder}/"  # Definir directorio
 
 except Exception as e:
     print(f"Ocurrió un error al leer el archivo de configuración: {e}")
-    createDefaultConfig()
+    crearArchivoPorDefecto()
 
-# Mostrar y seleccionar archivos disponibles en la carpeta
-def seleccionar_archivo_predeterminado():
-    try:
-        archivos = os.listdir(directory)  # Asegúrate de que 'directory' esté disponible
-        if not archivos:
-            print(f"No se encontraron archivos en la carpeta '{directory}'")
-            return None
-        print(f"Archivos disponibles en '{directory}':")
-        for i, archivo in enumerate(archivos):
-            print(f"{i + 1}. {archivo}")
-
-        # Selección del archivo por el usuario
-        opcion = input(f"Elija un archivo (1-{len(archivos)}): ")
-        if opcion.isdigit() and 1 <= int(opcion) <= len(archivos):
-            return archivos[int(opcion) - 1]
-        else:
-            print("Selección no válida.")
-            return None
-    except FileNotFoundError:
-        print(f"La carpeta '{directory}' no existe.")
-        return None
 
 # Menú de opciones
-def selectOption():
+def seleccionarOpcion():
     print("Ajustes:")
     print("1. Copiar automáticamente la contraseña al portapapeles.")
     print("2. Cambiar ruta de guardado.")
@@ -64,20 +43,20 @@ def selectOption():
     return option
 
 # Guardar configuración
-def saveSettings():
-    config.set('SETTINGS', 'autoCopyPassword', str(autoCopyPassword))
-    config.set('SETTINGS', 'folderName', folderName)
-    config.set('SETTINGS', 'defaultFile', defaultFile)  # Guardar archivo predeterminado
-    with open('settings.txt', 'w') as configfile:
-        config.write(configfile)
+def guardarConfiguracion():
+    configuracion.set('SETTINGS', 'autoCopiarContrasena', str(autoCopiarContrasena))
+    configuracion.set('SETTINGS', 'nombreFolder', nombreFolder)
+    configuracion.set('SETTINGS', 'archivoPorDefecto', archivoPorDefecto)  # Guardar archivo predeterminado
+    with open('settings.txt', 'w') as archivoDeConfiguracion:
+        configuracion.write(archivoDeConfiguracion)
 
 # Manejar activación/desactivación de copiado automático
-def handleAutoCopy():
-    Utils.clearCli()
-    global autoCopyPassword
-    autoCopyPassword = not autoCopyPassword
-    saveSettings()
-    if autoCopyPassword:
+def cambiarAutoCopiado():
+    Utils.borrarConsola()
+    global autoCopiarContrasena
+    autoCopiarContrasena = not autoCopiarContrasena
+    guardarConfiguracion()
+    if autoCopiarContrasena:
         print("Copiado automático de contraseñas activado.")
     else:
         print("Copiado automático de contraseñas desactivado.")
@@ -85,59 +64,59 @@ def handleAutoCopy():
 
 # Manejar cambio de ruta de guardado
 def handleNewFolder():
-    global folderName, directory
-    Utils.clearCli()
-    newFolderName = input("Ingrese la nueva ruta de guardado: ")
-    if newFolderName:
-        folderName = newFolderName
-        directory = f"{folderName}/"
-        saveSettings()
-        print(f"Ruta de guardado cambiada a: {directory}")
+    global nombreFolder, directorio
+    Utils.borrarConsola()
+    folderNuevo = input("Ingrese la nueva ruta de guardado: ")
+    if folderNuevo:
+        nombreFolder = folderNuevo
+        directorio = f"{nombreFolder}/"
+        guardarConfiguracion()
+        print(f"Ruta de guardado cambiada a: {directorio}")
         Utils.pausa(2)
 
 # Manejar selección de archivo predeterminado
-def handleDefaultFile():
-    global defaultFile
-    Utils.clearCli()
-    if defaultFile:
-        print(f"Archivo predeterminado actual: {defaultFile}")
+def cambiarArchivoPorDefecto():
+    global archivoPorDefecto
+    Utils.borrarConsola()
+    if archivoPorDefecto:
+        print(f"Archivo predeterminado actual: {archivoPorDefecto}")
         respuesta = input("¿Desea eliminar el archivo predeterminado? (s/n): ").lower()
         if respuesta == 's':
-            defaultFile = ''
-            saveSettings()
+            archivoPorDefecto = ''
+            guardarConfiguracion()
             print("Archivo predeterminado eliminado.")
         else:
             print("No se realizaron cambios.")
     else:
-        nuevo_archivo = seleccionar_archivo_predeterminado()
-        if nuevo_archivo:
-            defaultFile = nuevo_archivo
-            saveSettings()
-            print(f"Archivo predeterminado configurado: {defaultFile}")
+        archivoNuevo = Utils.seleccionarArchivo(directorio, "Archivo por defecto")
+        if archivoNuevo:
+            archivoPorDefecto = archivoNuevo
+            guardarConfiguracion()
+            print(f"Archivo predeterminado configurado: {archivoPorDefecto}")
         else:
             print("No se seleccionó ningún archivo.")
     Utils.pausa(2)
 
 # Función principal que maneja el ciclo del menú
 def main():
-    global autoCopyPassword, folderName, directory, defaultFile
+    global autoCopiarContrasena, nombreFolder, directorio, archivoPorDefecto
     while True:
-        Utils.clearCli()
+        Utils.borrarConsola()
         print("------------------------------------------------")
-        print(f"Ruta de guardado actual: {directory}")
-        print(f"Copiado al portapapeles automático: {autoCopyPassword}")
-        if defaultFile:
-            print(f"Archivo predeterminado: {defaultFile}")
+        print(f"Ruta de guardado actual: {directorio}")
+        print(f"Copiado al portapapeles automático: {autoCopiarContrasena}")
+        if archivoPorDefecto:
+            print(f"Archivo predeterminado: {archivoPorDefecto}")
         else:
             print("No hay archivo predeterminado configurado.")
         print("------------------------------------------------")
-        opcion = selectOption()
+        opcion = seleccionarOpcion()
         if opcion == "1":
-            handleAutoCopy()
+            cambiarAutoCopiado()
         elif opcion == "2":
             handleNewFolder()
         elif opcion == "3":
-            handleDefaultFile()
+            cambiarArchivoPorDefecto()
         elif opcion == "4":
             print("Cerrando menú...")
             break
