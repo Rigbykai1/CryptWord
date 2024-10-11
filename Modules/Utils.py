@@ -6,10 +6,6 @@ import Modules.CryptoFunctions as Crypto
 from Modules import Settings
 
 
-def verificadorDeRuta():
-    if not os.path.exists(Settings.nombreFolder):
-        os.makedirs(Settings.nombreFolder)
-
 def leerArchivos(directorio):
     archivos = os.listdir(directorio)
     if not archivos:
@@ -140,7 +136,8 @@ def saveEncryptedPassword(password):
     if opcion in ["S", "s"]:
         pin = verificarPin()
         encryptedPassword = Crypto.encriptarContrasena(password, pin)
-        verificadorDeRuta()
+        if not os.path.exists(Settings.nombreFolder):
+            os.makedirs(Settings.nombreFolder)
         while True:
             borrarConsola()
             fileName = input("Ingresa un nombre para el archivo: ")
