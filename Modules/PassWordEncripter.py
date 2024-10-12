@@ -2,9 +2,9 @@ import Modules.Utils as Utils
 
 
 def main():
-    password = input("Ingresa la contraseña a cifrar: ")
+    contrasena = input("Ingresa la contraseña a cifrar: ")
     try:
-        Utils.saveEncryptedPassword(password)
+        Utils.guardarArchivoBin(contrasena)
     except Exception as e:
         print(f"Oops, parece que hubo un error: {e}")
 

@@ -3,7 +3,6 @@ import Modules.PassWordEncripter as PassWordEncripter
 import Modules.PasswordGen as PasswordGen
 import Modules.Utils as Utils
 import Modules.Settings as Settings
-import time
 
 # Función para mostrar el menú
 def mostrarMenu():
@@ -22,7 +21,7 @@ def seleccionarOpcion():
             return opcion
         else:
             print("Opción no válida. Intente de nuevo.")
-            time.sleep(1)
+            Utils.pausa(1)
             Utils.borrarConsola()
 
 # Función para ejecutar las acciones según la opción elegida
@@ -40,18 +39,18 @@ def ejecutarOpcion(opcion):
 def ejecutarArchivoPredeterminado():
     archivoPredeterminado = Settings.archivoPorDefecto
     if archivoPredeterminado:
-        print(f"Ejecutando el archivo predeterminado: {archivoPredeterminado}")
         if Utils.recuperarContrasena(archivoPredeterminado):
-            print(f"Contraseña recuperada del archivo: {archivoPredeterminado}")
-        else:
-            print(f"No se pudo recuperar la contraseña del archivo: {archivoPredeterminado}")
+            Utils.borrarConsola()
+            print(f"Contraseña recuperada del exitosamente.")
     else:
+        Utils.borrarConsola()
         print("No hay archivo predeterminado configurado.")
+    Utils.pausa(2)
 
 # Función principal que maneja el ciclo del menú
 def main():
     Utils.borrarConsola()
-    ejecutarArchivoPredeterminado()  # Ejecuta el archivo predeterminado al inicio
+    ejecutarArchivoPredeterminado()
     while True:
         Utils.borrarConsola()
         opcion = seleccionarOpcion()
@@ -62,12 +61,9 @@ def main():
             Utils.pausa(2)
             break
 
-        # Ejecutar la opción seleccionada
         ejecutarOpcion(opcion)
         
-        # Pausa antes de volver al menú
-        time.sleep(1)
-        Utils.borrarConsola()
+        Utils.pausa(1)
 
 # Iniciar el programa
 if __name__ == "__main__":
