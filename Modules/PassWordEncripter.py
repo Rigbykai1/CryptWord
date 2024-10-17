@@ -2,6 +2,7 @@ import Modules.Utils as Utils
 
 
 def main():
+    Utils.borrarConsola()
     contrasena = input("Ingresa la contraseña a cifrar: ")
     try:
         Utils.guardarArchivoBin(contrasena)

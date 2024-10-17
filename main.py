@@ -5,6 +5,8 @@ import Modules.Utils as Utils
 import Modules.Settings as Settings
 
 # Función para mostrar el menú
+
+
 def mostrarMenu():
     print("1. Cifrar contraseña")
     print("2. Descifrar contraseña")
@@ -13,6 +15,8 @@ def mostrarMenu():
     print("5. Salir")
 
 # Función para seleccionar una opción válida del menú
+
+
 def seleccionarOpcion():
     while True:
         mostrarMenu()
@@ -25,6 +29,8 @@ def seleccionarOpcion():
             Utils.borrarConsola()
 
 # Función para ejecutar las acciones según la opción elegida
+
+
 def ejecutarOpcion(opcion):
     if opcion == "1":
         PassWordEncripter.main()
@@ -36,6 +42,8 @@ def ejecutarOpcion(opcion):
         Settings.main()
 
 # Función para ejecutar el archivo predeterminado
+
+
 def ejecutarArchivoPredeterminado():
     archivoPredeterminado = Settings.archivoPorDefecto
     if archivoPredeterminado:
@@ -48,13 +56,15 @@ def ejecutarArchivoPredeterminado():
     Utils.pausa(2)
 
 # Función principal que maneja el ciclo del menú
+
+
 def main():
     Utils.borrarConsola()
     ejecutarArchivoPredeterminado()
     while True:
         Utils.borrarConsola()
         opcion = seleccionarOpcion()
-        
+
         if opcion == "5":
             Utils.borrarConsola()
             print("Saliendo de CryptWord")
@@ -62,8 +72,9 @@ def main():
             break
 
         ejecutarOpcion(opcion)
-        
+
         Utils.pausa(1)
+
 
 # Iniciar el programa
 if __name__ == "__main__":

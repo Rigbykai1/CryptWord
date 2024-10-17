@@ -1,45 +1,92 @@
 import os
-from hashlib import sha256
+from cryptography.exceptions import InvalidSignature
 from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
-from cryptography.hazmat.primitives import padding
+from cryptography.hazmat.primitives import padding, hashes, hmac
+from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 from cryptography.hazmat.backends import default_backend
 
 
-def encriptarContrasena(password, pin):
+# Función para derivar la clave con PBKDF2
+def derivarClave(pin, sal, iteraciones=100000):
+    kdf = PBKDF2HMAC(
+        algorithm=hashes.SHA256(),
+        length=32,  # Longitud adecuada para AES-256
+        salt=sal,
+        iterations=iteraciones,
+        backend=default_backend()
+    )
+    return kdf.derive(pin.encode())
+
+# Función para generar HMAC
+def generarHmac(llave, datos):
+    h = hmac.HMAC(llave, hashes.SHA256(), backend=default_backend())
+    h.update(datos)
+    return h.finalize()
+
+# Función para verificar HMAC
+def verificarHmac(llave, datos, mac):
+    h = hmac.HMAC(llave, hashes.SHA256(), backend=default_backend())
+    h.update(datos)
+    h.verify(mac)  # Lanza una excepción si no coincide
+
+# Función para encriptar contraseñas
+def encriptarContrasena(contrasena, pin):
     try:
-        salt = os.urandom(16)
-        key = sha256(pin.encode() + salt).digest()
-        iv = os.urandom(16)
-        cipher = Cipher(algorithms.AES(key), modes.CBC(iv),
-                        backend=default_backend())
+        sal = os.urandom(16)  # Genera una sal aleatoria
+        llave = derivarClave(pin, sal)  # Deriva la clave con PBKDF2
+        
+        iv = os.urandom(16)  # Genera un IV aleatorio para CBC
+        cipher = Cipher(algorithms.AES(llave), modes.CBC(iv), backend=default_backend())
         encryptor = cipher.encryptor()
+        
+        # Padding de la contraseña para que sea múltiplo del tamaño de bloque
         padder = padding.PKCS7(algorithms.AES.block_size).padder()
-        paddedPassword = padder.update(password.encode()) + padder.finalize()
-        encryptedPassword = encryptor.update(
-            paddedPassword) + encryptor.finalize()
-        print("Contraseña encriptada")
-        return salt + iv + encryptedPassword
-    except Exception:
-        print(f"Error al encriptar la contraseña")
+        contrasenaAlmohadilla = padder.update(contrasena.encode()) + padder.finalize()
+        
+        # Cifrar la contraseña
+        contrasenaCifrada = encryptor.update(contrasenaAlmohadilla) + encryptor.finalize()
+        
+        # Generar HMAC para asegurar integridad (sal + iv + contrasenaCifrada)
+        llaveHmac = derivarClave(pin, sal, iteraciones=200000)  # Usar clave derivada diferente para HMAC
+        hmacValor = generarHmac(llaveHmac, sal + iv + contrasenaCifrada)
+        
+        print("Contraseña encriptada y autenticada")
+        return sal + iv + contrasenaCifrada + hmacValor  # Devolver el conjunto de datos: sal + iv + cifrado + hmac
+    except Exception as e:
+        print(f"Error al encriptar la contraseña: {e}")
         return None
 
-
-def desencriptarContrasena(encryptedPassword, pin):
+# Función para desencriptar contraseñas
+def desencriptarContrasena(datosCifrados, pin):
     try:
-        salt = encryptedPassword[:16]
-        encryptedPassword = encryptedPassword[16:]
-        key = sha256(pin.encode() + salt).digest()
-        iv = encryptedPassword[:16]
-        encryptedPassword = encryptedPassword[16:]
-        cipher = Cipher(algorithms.AES(key), modes.CBC(iv),
-                        backend=default_backend())
+        sal = datosCifrados[:16]  # Extraer la sal
+        iv = datosCifrados[16:32]  # Extraer el IV
+        hmacValor = datosCifrados[-32:]  # Extraer el HMAC (últimos 32 bytes)
+        contrasenaCifrada = datosCifrados[32:-32]  # Extraer la contraseña cifrada
+        
+        # Derivar clave y verificar el HMAC
+        llaveHmac = derivarClave(pin, sal, iteraciones=200000)
+        verificarHmac(llaveHmac, sal + iv + contrasenaCifrada, hmacValor)
+        
+        # Derivar la clave para desencriptar
+        llave = derivarClave(pin, sal)
+        
+        # Inicializar el cifrador AES en modo CBC
+        cipher = Cipher(algorithms.AES(llave), modes.CBC(iv), backend=default_backend())
         decryptor = cipher.decryptor()
-        padded_password = decryptor.update(
-            encryptedPassword) + decryptor.finalize()
+        
+        # Desencriptar la contraseña
+        contrasenaAlmohadilla = decryptor.update(contrasenaCifrada) + decryptor.finalize()
+        
+        # Deshacer el padding
         unpadder = padding.PKCS7(algorithms.AES.block_size).unpadder()
-        contrasena = unpadder.update(padded_password) + unpadder.finalize()
-        print("Contraseña desencriptada")
+        contrasena = unpadder.update(contrasenaAlmohadilla) + unpadder.finalize()
+        
+        print("Contraseña desencriptada correctamente")
         return contrasena.decode()
-    except Exception:
-        print(f"Error al desencriptar la contraseña")
+    except InvalidSignature:
+        print("Error: Los datos han sido alterados o el PIN es incorrecto.")
+        return None
+    except Exception as e:
+        print(f"Error al desencriptar la contraseña: {e}")
         return None
