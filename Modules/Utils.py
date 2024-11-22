@@ -1,30 +1,47 @@
 import os
 import time
 import getpass
-import pyperclip
+import subprocess
+import sys
 import Modules.CryptoFunctions as Crypto
 from Modules import Settings
 
 
+def verificar_dependencias(paquetes):
+    for paquete in paquetes:
+        print(f"Cargando librería: {paquete}")
+        subprocess.run([sys.executable, "-m", "pip", "install", "--upgrade",
+                       paquete], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        borrarConsola()
+
+def cargar_modulos(paquetes):
+    try:
+        global pyperclip, cryptography
+        verificar_dependencias(paquetes)
+        import hashlib
+        import pyperclip
+        import cryptography
+
+    except ImportError as e:
+        print(f"Error al cargar librerías")
+        
+        return False
+
+
 def leerArchivos(directorio):
     archivos = os.listdir(directorio)
-
     if not archivos:
         print("No hay contraseñas guardadas.")
         return []
-
     return archivos
-
 
 def seleccionarArchivo(directorio, mensaje):
     try:
         archivos = leerArchivos(directorio)
-
         if not archivos:
             print(f"No se encontraron archivos en la carpeta '{directorio}'")
-
             return None
-
+        
         # Mostrar archivos disponibles
         print(mensaje)
         for i, archivo in enumerate(archivos):
@@ -32,24 +49,16 @@ def seleccionarArchivo(directorio, mensaje):
 
         # Solicitar selección de archivo
         opcion = input(f"Elija un archivo (1-{len(archivos)}): ")
-
         if opcion.isdigit() and 1 <= int(opcion) <= len(archivos):
-
             return archivos[int(opcion) - 1]
-
         else:
             print("Selección no válida.")
-
             return None
-
     except FileNotFoundError:
         print(f"La carpeta '{directorio}' no existe.")
-
         return None
-
     except Exception as e:
         print(f"Ocurrió un error: {e}")
-
         return None
 
 
@@ -73,50 +82,30 @@ def ingresarPin(archivoContrasenaBin, nombreArchivo):
         pin = getpass.getpass(prompt="Ingresa el PIN: ")
 
         if pin == 'salir':
-            print("Saliendo...")
-            pausa(1)
-            return False
-
-        decryptedPassword = Crypto.desencriptarContrasena(
-            archivoContrasenaBin, pin)
+            despedida = print("Saliendo...")
+            pausa(2)
+            return despedida
+        decryptedPassword = Crypto.desencriptarContrasena(archivoContrasenaBin, pin)
 
         if decryptedPassword:
             borrarConsola()
             print("PIN correcto")
-            pausa(1)
-
+            pausa(2)
             return decryptedPassword
-
         else:
             print("PIN incorrecto, verifica tu entrada.")
-        pausa(1)
-
-
-def validarPin():
-    while True:
-        borrarConsola()
-        pin = getpass.getpass(prompt="Ingresa el PIN: ")
-        if len(pin) > 5:
-            return pin
-        print("----------    IMPORTANTE  ----------")
-        print("Es importante que la contraseña sea mayor de 6 digitos, cuida tu seguridad")
-        opcion = input("Desea continuar de todos modos(s/n): ")
-        if opcion.lower() == "s":
-            return pin
+        pausa(2)
 
 
 def verificarPin():
     while True:
-        pin1 = validarPin()
+        pin1 = getpass.getpass(prompt="Ingresa el PIN: ")
         pin2 = getpass.getpass(prompt="Confirme el PIN: ")
-
         if pin1 == pin2:
             borrarConsola()
             print('\nLos pines ingresados coinciden\n')
             pausa(1)
-
             return pin1
-
         else:
             borrarConsola()
             print('\nPines distintos, intenta nuevamente.\n')
@@ -127,10 +116,8 @@ def verificarPin():
 def copiarEnPortapapeles(contrasena, tiempoEspera):
     autoCopy = Settings.autoCopiarContrasena
     borrarConsola()
-
     if not autoCopy:
         opcion = input("¿Desea copiar la contraseña al portapapeles? [S/N] ")
-
     if autoCopy or opcion in ["S", "s"]:
         pyperclip.copy("")
         pyperclip.copy(contrasena)
@@ -138,13 +125,10 @@ def copiarEnPortapapeles(contrasena, tiempoEspera):
               tiempoEspera}s")
         pausa(tiempoEspera)
         pyperclip.copy("")
-
         return True
-
     print(f"La contraseña es: {contrasena} ")
     print(f"Se borrará en {tiempoEspera}s ")
     pausa(tiempoEspera)
-
     return False
 
 
@@ -154,57 +138,44 @@ def recuperarContrasena(nombreArchivo):
     directorio = os.path.join(Settings.directorio, nombreArchivo)
 
     if not os.path.exists(directorio):
-        print(f"El archivo {nombreArchivo} no existe en la ruta {
-              Settings.directorio}.")
-        pausa(1)
-
+        print(f"El archivo {nombreArchivo} no existe en la ruta {Settings.directorio}.")
+        pausa(2)
         return False
 
     print(f"Archivo actual: {nombreArchivo}")
-
     try:
         with open(directorio, 'rb') as file:
             archivoBin = file.read()
-
     except Exception as e:
         print(f"Ocurrió un error al leer el archivo: {e}")
-        pausa(1)
-
+        pausa(2)
         return False
-
+    
     desencriptarContrasena = ingresarPin(archivoBin, nombreArchivo)
-
+    
     if desencriptarContrasena:
         copiarEnPortapapeles(desencriptarContrasena, tiempoEspera)
-
         return True
-
 
 def guardarArchivoBin(contrasena):
     borrarConsola()
     opcion = input("¿Desea guardar la contraseña? [S/N] ")
-
     if opcion in ["S", "s"]:
         pin = verificarPin()
         contrasenaEncriptada = Crypto.encriptarContrasena(contrasena, pin)
-
         if not os.path.exists(Settings.nombreFolder):
             os.makedirs(Settings.nombreFolder)
-
         while True:
             borrarConsola()
             nombreArchivo = input("Ingresa un nombre para el archivo: ")
             directorio = f'{Settings.directorio}{nombreArchivo}.bin'
-
             if os.path.exists(directorio):
                 print(
                     "Ya existe un archivo con ese nombre. Por favor, elige otro nombre.")
-                pausa(1)
-
+                pausa(2)
             else:
                 with open(directorio, 'wb') as file:
                     file.write(contrasenaEncriptada)
                     print("Contraseña cifrada guardada en tus archivos :D.")
-
                     return True
     return False

@@ -34,11 +34,11 @@ def generadorDeContrasenas(limite):
 def main():
     Utils.borrarConsola()
     try:
-        limite = int(input("Ingresa en tamaño de la contraseña: "))
-        if limite < 8:
+        limit = int(input("Ingresa en tamaño de la contraseña: "))
+        if limit < 8:
             raise ValueError(
                 "La longitud de la contraseña debe ser al menos 8 caracteres.")
-        password = generadorDeContrasenas(limite)
+        password = generadorDeContrasenas(limit)
         print(f'Contraseña creada: {password}')
         Utils.copiarEnPortapapeles(password, 5)
         Utils.guardarArchivoBin(password)

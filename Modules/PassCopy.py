@@ -8,6 +8,3 @@ def main():
 
     if binFile:
         Utils.recuperarContrasena(binFile)
-
-if __name__ == "__main__":
-    main()
