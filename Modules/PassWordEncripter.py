@@ -7,3 +7,6 @@ def main():
         Utils.guardarArchivoBin(password)
     except Exception as e:
         print(f"Oops, parece que hubo un error: {e}")
+
+if __name__ == "__main__":
+    main()

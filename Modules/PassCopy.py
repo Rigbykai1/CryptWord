@@ -1,4 +1,3 @@
-import os
 from Modules import Settings
 import Modules.Utils as Utils
 
@@ -8,3 +7,6 @@ def main():
 
     if binFile:
         Utils.recuperarContrasena(binFile)
+
+if __name__ == "__main__":
+    main()

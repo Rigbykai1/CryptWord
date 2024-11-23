@@ -1,7 +1,7 @@
+import Modules.Utils as Utils
 import Modules.PassCopy as PassCopy
 import Modules.PassWordEncripter as PassWordEncripter
 import Modules.PasswordGen as PasswordGen
-import Modules.Utils as Utils
 import Modules.Settings as Settings
 import time
 
@@ -50,8 +50,8 @@ def ejecutarArchivoPredeterminado():
 
 # Función principal que maneja el ciclo del menú
 def main():
-    dependencias = ["hashlib", "pyperclip", "cryptography"]
-    Utils.cargar_modulos(dependencias)
+    dependencias = ["pyperclip", "cryptography"]
+    Utils.verificar_dependencias(dependencias)
     Utils.borrarConsola()
     ejecutarArchivoPredeterminado()  # Ejecuta el archivo predeterminado al inicio
     while True:

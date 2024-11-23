@@ -1,6 +1,4 @@
 import os
-import subprocess
-import sys
 from hashlib import sha256
 from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
 from cryptography.hazmat.primitives import padding
@@ -44,4 +42,3 @@ def desencriptarContrasena(encryptedPassword, pin):
     except Exception:
         print(f"Error al desencriptar la contraseña")
         return None
-

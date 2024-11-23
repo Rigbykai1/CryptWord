@@ -3,30 +3,27 @@ import time
 import getpass
 import subprocess
 import sys
-import Modules.CryptoFunctions as Crypto
 from Modules import Settings
 
+def importar_crypto():
+    import Modules.CryptoFunctions as Crypto
+    return Crypto
+
+def cargar_modulos():
+    global pyperclip, cryptography
+    import pyperclip
+    import cryptography
+        
 
 def verificar_dependencias(paquetes):
-    for paquete in paquetes:
-        print(f"Cargando librería: {paquete}")
-        subprocess.run([sys.executable, "-m", "pip", "install", "--upgrade",
-                       paquete], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-        borrarConsola()
-
-def cargar_modulos(paquetes):
     try:
-        global pyperclip, cryptography
-        verificar_dependencias(paquetes)
-        import hashlib
-        import pyperclip
-        import cryptography
-
-    except ImportError as e:
-        print(f"Error al cargar librerías")
-        
-        return False
-
+        cargar_modulos()
+    except:
+        print("Error al cargar librerias.")
+        for paquete in paquetes:
+            print(f"Cargando librería: {paquete}")
+            subprocess.run([sys.executable, "-m", "pip", "install", paquete], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            borrarConsola()
 
 def leerArchivos(directorio):
     archivos = os.listdir(directorio)
@@ -75,6 +72,7 @@ def pausaInterrumpida():
 
 
 def ingresarPin(archivoContrasenaBin, nombreArchivo):
+    Crypto = importar_crypto()
     while True:
         borrarConsola()
         print(f"Archivo actual {nombreArchivo}")
@@ -158,6 +156,7 @@ def recuperarContrasena(nombreArchivo):
         return True
 
 def guardarArchivoBin(contrasena):
+    Crypto = importar_crypto()
     borrarConsola()
     opcion = input("¿Desea guardar la contraseña? [S/N] ")
     if opcion in ["S", "s"]:
